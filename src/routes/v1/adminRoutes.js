@@ -3,6 +3,13 @@ const router = express.Router()
 const adminImportController = require('../../controllers/adminImportController')
 const { protect, adminOnly } = require('../../middleware/auth')
 
+router.get('/', protect, adminOnly, (req, res) => {
+  res.json({
+    success: true,
+    user: req.user
+  })
+})
+
 router.get('/dashboard-stats', protect, adminOnly, adminImportController.getDashboardStats)
 router.get('/pending-products', protect, adminOnly, adminImportController.listPendingProducts)
 router.get('/pending-services', protect, adminOnly, adminImportController.listPendingServices)
