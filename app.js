@@ -66,8 +66,8 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 app.use(cookieParser())
 
 // Static files
-const uploadsDir = process.env.VERCEL === '1' ? '/tmp/uploads' : path.join(__dirname, '../../uploads')
-app.use('/uploads', express.static(uploadsDir))
+const { UPLOAD_DIR } = require('./src/config/constants')
+app.use('/uploads', express.static(UPLOAD_DIR))
 
 // Favicon handler - return empty response to avoid 500 errors
 app.get('/favicon.ico', (req, res) => {

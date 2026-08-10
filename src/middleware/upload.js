@@ -3,10 +3,14 @@ const path = require('path')
 const fs = require('fs')
 const { ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE, UPLOAD_DIR } = require('../config/constants')
 
-// Ensure upload directory exists
+// Ensure upload directory exists in a serverless-safe way
 try {
+  if (!UPLOAD_DIR) {
+    throw new Error('UPLOAD_DIR is not configured')
+  }
+
   if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR, { recursive: true })
+    fs.mkdirSync(UPLOAD_DIR, { recursive: true, mode: 0o755 })
   }
 } catch (error) {
   console.warn(`Warning: Could not create upload directory ${UPLOAD_DIR}:`, error.message)
