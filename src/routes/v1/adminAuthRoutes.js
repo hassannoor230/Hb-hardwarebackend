@@ -1,11 +1,18 @@
 const express = require('express')
 const router = express.Router()
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin12345'
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || process.env.ADMIN_PASS || (process.env.NODE_ENV !== 'production' ? 'admin12345' : null)
 
 router.post('/login', (req, res) => {
   try {
     const { password } = req.body
+
+    if (!ADMIN_PASSWORD) {
+      return res.status(500).json({
+        success: false,
+        message: 'Admin password is not configured. Set ADMIN_PASSWORD in the backend Vercel environment variables.'
+      })
+    }
 
     if (!password) {
       return res.status(400).json({
