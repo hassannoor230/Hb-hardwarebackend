@@ -83,9 +83,49 @@ app.get('/', (req, res) => {
     status: 'OK',
     endpoints: {
       health: '/health',
-      api: '/api/v1',
+      api: '/api',
+      api_v1: '/api/v1',
       products: '/api/v1/products',
       services: '/api/v1/services'
+    }
+  })
+})
+
+app.get('/api', (req, res) => {
+  res.json({
+    success: true,
+    message: 'HB Hardware Backend API',
+    version: '1.0.0',
+    status: 'OK',
+    endpoints: {
+      health: '/api/health',
+      api_v1: '/api/v1',
+      products: '/api/v1/products',
+      services: '/api/v1/services'
+    }
+  })
+})
+
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV
+  })
+})
+
+app.get('/api/v1', (req, res) => {
+  res.json({
+    success: true,
+    message: 'HB Hardware API v1',
+    version: '1.0.0',
+    status: 'OK',
+    endpoints: {
+      health: '/api/v1/health',
+      products: '/api/v1/products',
+      services: '/api/v1/services',
+      admin: '/api/v1/admin'
     }
   })
 })
