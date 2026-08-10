@@ -14,15 +14,7 @@ const app = express()
 
 // Security middleware
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      fontSrc: ["'self'", "https:", "data:"],
-    },
-  },
+  contentSecurityPolicy: false,
 }))
 
 // CORS
@@ -47,7 +39,7 @@ app.use(cors(corsOptions))
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 100,
   message: {
     success: false,
@@ -74,7 +66,29 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 app.use(cookieParser())
 
 // Static files
-app.use('/uploads', express.static(path.join(__dirname, '../../uploads')))
+const uploadsDir = process.env.VERCEL === '1' ? '/tmp/uploads' : path.join(__dirname, '../../uploads')
+app.use('/uploads', express.static(uploadsDir))
+
+// Favicon handler - return empty response to avoid 500 errors
+app.get('/favicon.ico', (req, res) => {
+  res.status(204).send()
+})
+
+// Root handler
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'HB Hardware Backend API',
+    version: '1.0.0',
+    status: 'OK',
+    endpoints: {
+      health: '/health',
+      api: '/api/v1',
+      products: '/api/v1/products',
+      services: '/api/v1/services'
+    }
+  })
+})
 
 // Health check
 app.get('/health', (req, res) => {

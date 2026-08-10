@@ -4,8 +4,12 @@ const fs = require('fs')
 const { ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE, UPLOAD_DIR } = require('../config/constants')
 
 // Ensure upload directory exists
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true })
+try {
+  if (!fs.existsSync(UPLOAD_DIR)) {
+    fs.mkdirSync(UPLOAD_DIR, { recursive: true })
+  }
+} catch (error) {
+  console.warn(`Warning: Could not create upload directory ${UPLOAD_DIR}:`, error.message)
 }
 
 // Configure storage
