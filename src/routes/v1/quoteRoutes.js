@@ -2,14 +2,13 @@ const express = require('express')
 const router = express.Router()
 const quoteController = require('../../controllers/quoteController')
 const { validateQuote } = require('../../middleware/validation')
+const { protect, adminOnly } = require('../../middleware/auth')
 
-// Public routes
 router.post('/', validateQuote, quoteController.submitQuote)
 
-// Admin routes
-router.get('/', quoteController.getAllQuotes)
-router.get('/:id', quoteController.getQuoteById)
-router.put('/:id/status', quoteController.updateQuoteStatus)
-router.delete('/:id', quoteController.deleteQuote)
+router.get('/', protect, adminOnly, quoteController.getAllQuotes)
+router.get('/:id', protect, adminOnly, quoteController.getQuoteById)
+router.put('/:id/status', protect, adminOnly, quoteController.updateQuoteStatus)
+router.delete('/:id', protect, adminOnly, quoteController.deleteQuote)
 
 module.exports = router

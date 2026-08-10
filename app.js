@@ -18,14 +18,26 @@ app.use(helmet({
 }))
 
 // CORS
+const normalizeOrigin = (value) => {
+  if (!value) return ''
+
+  try {
+    return new URL(value.trim()).origin
+  } catch (error) {
+    return value.trim().replace(/\/+$/, '')
+  }
+}
+
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:3000')
   .split(',')
-  .map(origin => origin.trim())
+  .map(normalizeOrigin)
   .filter(Boolean)
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    const normalizedOrigin = normalizeOrigin(origin)
+
+    if (!origin || allowedOrigins.includes(normalizedOrigin)) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))

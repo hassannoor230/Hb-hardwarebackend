@@ -1,14 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const galleryController = require('../../controllers/galleryController')
+const { protect, adminOnly } = require('../../middleware/auth')
 
-// Public routes
 router.get('/', galleryController.getAllImages)
 router.get('/:id', galleryController.getImageById)
 
-// Admin routes (would be protected with auth in production)
-router.post('/', galleryController.createImage)
-router.put('/:id', galleryController.updateImage)
-router.delete('/:id', galleryController.deleteImage)
+router.post('/', protect, adminOnly, galleryController.createImage)
+router.put('/:id', protect, adminOnly, galleryController.updateImage)
+router.delete('/:id', protect, adminOnly, galleryController.deleteImage)
 
 module.exports = router

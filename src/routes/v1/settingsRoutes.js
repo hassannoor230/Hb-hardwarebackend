@@ -1,13 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const settingsController = require('../../controllers/settingsController')
+const { protect, adminOnly } = require('../../middleware/auth')
 
-// Public routes
 router.get('/site', settingsController.getSiteSettings)
 router.get('/business', settingsController.getBusinessInfo)
 
-// Admin routes (would be protected with auth in production)
-router.put('/site', settingsController.updateSiteSettings)
-router.put('/business', settingsController.updateBusinessInfo)
+router.put('/site', protect, adminOnly, settingsController.updateSiteSettings)
+router.put('/business', protect, adminOnly, settingsController.updateBusinessInfo)
 
 module.exports = router
