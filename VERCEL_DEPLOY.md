@@ -65,7 +65,7 @@ After deploying your backend to Vercel, update your frontend to point to the Ver
 
 In your frontend `.env` or API configuration:
 ```
-VITE_API_URL=https://your-backend.vercel.app/api/v1
+VITE_API_URL=https://your-backend.vercel.app
 ```
 
 ## Step 6: Test Your Deployment
